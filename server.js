@@ -53,7 +53,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(frontendPath));
 
   // Serve React index.html for all unknown routes
-  app.get("/*", (req, res) => {
+  app.get('*', (req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
