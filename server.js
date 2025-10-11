@@ -20,9 +20,10 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // local frontend
-      "https://student-tracker.vercel.app", // optional deployed frontend if needed
-      "https://your-render-app-name.onrender.com", // Render frontend served from same server
+     "https://libfront.vercel.app/", // Vercel frontend URL
+     // "https://libfront-amits-projects-5496469d.vercel.app", // Vercel frontend URL
+      "http://localhost:5173", // Localhost for local testing
+      "https://your-render-app-name.onrender.com" // Backend server URL (if needed)
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
