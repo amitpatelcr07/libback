@@ -20,10 +20,10 @@ const app = express();
 app.use(
   cors({
     origin: [
-     "https://libfront.vercel.app", // Vercel frontend URL
-     // "https://libfront-amits-projects-5496469d.vercel.app", // Vercel frontend URL
+      "https://libfront.vercel.app", // Vercel frontend URL
+      // "https://libfront-amits-projects-5496469d.vercel.app", // Vercel frontend URL
       "http://localhost:5173", // Localhost for local testing
-      "https://your-render-app-name.onrender.com" // Backend server URL (if needed)
+      "https://your-render-app-name.onrender.com", // Backend server URL (if needed)
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
@@ -54,7 +54,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(frontendPath));
 
   // Serve React index.html for all unknown routes
-  app.get('/*', (req, res) => {
+  app.get("/*", (req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
@@ -66,7 +66,7 @@ const PORT = process.env.PORT || 7000;
 const MONGO_URL = process.env.MONGO_URL;
 
 mongoose
-  .connect(MONGO_URL)
+  .connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("✅ Connected to MongoDB");
     app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

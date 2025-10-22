@@ -1,16 +1,58 @@
 import Student from "../models/studentModel.js";
 
 // Create Student
- const addStudents = async (req, res) => {
+// const addStudents = async (req, res) => {
+//   try {
+//     console.log("working fine for add student ");
+//     console.log("Body:", req.body);
+//     console.log("File:", req.file);
+//     res.json({ body: req.body, file: req.file });
+//     const { name, email, password, address, fees, status, batchTime, image } =
+//       req.body;
+//     const imageUrl = req.file ? req.file.path : undefined;
+//     // Validation
+//     if (!name || !email || !password || !address || !fees || !batchTime) {
+//       return res.status(400).json({ error: "All fields are required" });
+//     }
+
+//     const newStudent = new Student({
+//       name,
+//       email,
+//       password,
+//       address,
+//       fees,
+//       status,
+//       batchTime,
+//       imageUrl,
+//     });
+//     await newStudent.save();
+
+//     res
+//       .status(201)
+//       .json({ message: "Student added successfully", student: newStudent });
+//   } catch (error) {
+//     console.log("error part working ");
+//     res.status(400).json({ error: error.message });
+//   }
+// };
+// Create Student
+const addStudents = async (req, res) => {
   try {
+    console.log("✅ Working fine for add student");
+    console.log("Body:", req);
+    console.log("File:", req.file);
+
+    // Extract fields
     const { name, email, password, address, fees, status, batchTime } =
       req.body;
+    const imageUrl = req.file ? req.file.path : undefined;
 
     // Validation
     if (!name || !email || !password || !address || !fees || !batchTime) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
+    // Create new student
     const newStudent = new Student({
       name,
       email,
@@ -19,19 +61,22 @@ import Student from "../models/studentModel.js";
       fees,
       status,
       batchTime,
+       imageUrl, 
     });
+
     await newStudent.save();
 
-    res
+    return res
       .status(201)
       .json({ message: "Student added successfully", student: newStudent });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.log("❌ Error in addStudents:", error.message);
+    return res.status(400).json({ error: error.message });
   }
 };
 
 // Get all students
- const getStudents = async (req, res) => {
+const getStudents = async (req, res) => {
   try {
     const students = await Student.find();
     res.json(students);
@@ -41,7 +86,7 @@ import Student from "../models/studentModel.js";
 };
 
 // Get single student
- const getStudentById = async (req, res) => {
+const getStudentById = async (req, res) => {
   try {
     const student = await Student.findById(req.params.id);
     if (!student) return res.status(404).json({ error: "Student not found" });
@@ -52,7 +97,7 @@ import Student from "../models/studentModel.js";
 };
 
 // Update student
- const updateStudent = async (req, res) => {
+const updateStudent = async (req, res) => {
   try {
     const student = await Student.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -62,12 +107,11 @@ import Student from "../models/studentModel.js";
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
- };
+};
 
 // Delete student
 
- const deleteStudent = async (req, res) => {
-
+const deleteStudent = async (req, res) => {
   try {
     const student = await Student.findByIdAndDelete(req.params.id);
 
@@ -80,7 +124,7 @@ import Student from "../models/studentModel.js";
 
 const studentController = {
   addStudents,
-  getStudents,  
+  getStudents,
   getStudentById,
   updateStudent,
   deleteStudent,

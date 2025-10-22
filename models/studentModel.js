@@ -10,6 +10,7 @@ const studentSchema = new mongoose.Schema(
     fees: { type: Number, required: true },
     status: { type: String, enum: ["active", "inactive"], default: "active" },
     batchTime: { type: String, required: true },
+    imageUrl: { type: String },  // cloudinary image URL
   },
   { timestamps: true }
 );
