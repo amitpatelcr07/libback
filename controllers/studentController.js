@@ -1,40 +1,4 @@
 import Student from "../models/studentModel.js";
-
-// Create Student
-// const addStudents = async (req, res) => {
-//   try {
-//     console.log("working fine for add student ");
-//     console.log("Body:", req.body);
-//     console.log("File:", req.file);
-//     res.json({ body: req.body, file: req.file });
-//     const { name, email, password, address, fees, status, batchTime, image } =
-//       req.body;
-//     const imageUrl = req.file ? req.file.path : undefined;
-//     // Validation
-//     if (!name || !email || !password || !address || !fees || !batchTime) {
-//       return res.status(400).json({ error: "All fields are required" });
-//     }
-
-//     const newStudent = new Student({
-//       name,
-//       email,
-//       password,
-//       address,
-//       fees,
-//       status,
-//       batchTime,
-//       imageUrl,
-//     });
-//     await newStudent.save();
-
-//     res
-//       .status(201)
-//       .json({ message: "Student added successfully", student: newStudent });
-//   } catch (error) {
-//     console.log("error part working ");
-//     res.status(400).json({ error: error.message });
-//   }
-// };
 // Create Student
 const addStudents = async (req, res) => {
   try {

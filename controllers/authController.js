@@ -1,43 +1,77 @@
+
 import Student from "../models/studentModel.js";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-// Register (already part of addStudent, just hash password)
-export const registerStudent = async (req, res) => {
-  try {
-    const student = new Student(req.body);
-    await student.save();
-    res
-      .status(201)
-      .json({ message: "Student registered successfully", student });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+// Helper function to generate JWT
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30m" });
 };
 
-// Login
+// ✅ Student Login
 export const loginStudent = async (req, res) => {
+  console.log("from frontend is there is a rquest")
   try {
     const { email, password } = req.body;
+
     const student = await Student.findOne({ email });
-    console.log(student);
-    if (!student) return res.status(404).json({ error: "Student not found" });
+    if (!student) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
 
-    const isMatch = await bcrypt.compare(password, student.password);
-    if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
+    const isMatch = await student.matchPassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
 
-    // Generate JWT token
-    const token = jwt.sign({ id: student._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+    const token = generateToken(student._id);
+
+    res.status(200).json({
+      message: "Login successful",
+      student: {
+        _id: student._id,
+        name: student.name,
+        email: student.email,
+      },
+      token,
     });
-
-    res.json({ message: "Login successful", token });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-// Logout (client-side deletes token)
-export const logoutStudent = (req, res) => {
-  res.json({ message: "Logout successful. Just delete token on client side." });
+// ✅ Student Register (optional)
+export const registerStudent = async (req, res) => {
+  console.log("Register request receivedqq:", req.body);
+  try {
+    const { name, email, password, address, fees, batchTime } = req.body;
+
+    const existingStudent = await Student.findOne({ email });
+    if (existingStudent) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
+
+    const newStudent = await Student.create({
+      name,
+      email,
+      password,
+      address,
+      fees,
+      batchTime,
+    });
+
+    const token = generateToken(newStudent._id);
+
+    res.status(201).json({
+      message: "Registration successful",
+      student: {
+        _id: newStudent._id,
+        name: newStudent.name,
+        email: newStudent.email,
+      },
+      token,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 };
