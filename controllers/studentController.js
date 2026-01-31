@@ -1,6 +1,6 @@
 import Student from "../models/studentModel.js";
 // Create Student
-const PROTECTED_STUDENT_ID = "697ce88d52194a7634e37cca";
+const PROTECTED_STUDENT_ID = "697da75b11b5fd7b48e6ffae";
 const addStudents = async (req, res) => {
   try {
     console.log("✅ Working fine for add student");
