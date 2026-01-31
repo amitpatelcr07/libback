@@ -7,7 +7,7 @@ import cloudinary from "./cloudinary.js";
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: "student_images", // 👈 your Cloudinary folder name
+    folder: "student_images", //  your Cloudinary folder name
     allowed_formats: ["jpg", "jpeg", "png"],
     public_id: (req, file) =>
       Date.now() + "-" + file.originalname.split(".")[0],

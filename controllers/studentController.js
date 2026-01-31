@@ -1,5 +1,6 @@
 import Student from "../models/studentModel.js";
 // Create Student
+const PROTECTED_STUDENT_ID = "697ce88d52194a7634e37cca";
 const addStudents = async (req, res) => {
   try {
     console.log("✅ Working fine for add student");
@@ -25,7 +26,7 @@ const addStudents = async (req, res) => {
       fees,
       status,
       batchTime,
-       imageUrl, 
+      imageUrl,
     });
 
     await newStudent.save();
@@ -63,6 +64,14 @@ const getStudentById = async (req, res) => {
 // Update student
 const updateStudent = async (req, res) => {
   try {
+    const { id } = req.params;
+    console.log("Update request for student ID:", id);
+    if (id === PROTECTED_STUDENT_ID) {
+      console.log("Attempting to update protected student with ID:", id);
+      return res.status(403).json({
+        message: "You can’t update this student because it is protected",
+      });
+    }
     const student = await Student.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
@@ -75,16 +84,36 @@ const updateStudent = async (req, res) => {
 
 // Delete student
 
+
+
 const deleteStudent = async (req, res) => {
   try {
-    const student = await Student.findByIdAndDelete(req.params.id);
+    const { id } = req.params;
 
-    if (!student) return res.status(404).json({ error: "Student not found" });
-    res.json({ message: "Student deleted successfully" });
+    
+    if (id === PROTECTED_STUDENT_ID) {
+      console.log("Attempting to delete protected student with ID:", id);
+      return res.status(403).json({
+        message: "You can’t delete this student because it is protected",
+      });
+    }
+
+    const student = await Student.findByIdAndDelete(id);
+
+    if (!student) {
+      return res.status(404).json({
+        message: "Student not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Student deleted successfully",
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
+
 
 const studentController = {
   addStudents,
